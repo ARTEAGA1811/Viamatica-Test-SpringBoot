@@ -46,15 +46,15 @@ public class UserEntity {
     @Column(name = "status")
     private String status;
 
-    @ManyToOne(targetEntity = PersonEntity.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = PersonEntity.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "idPersona")
     private PersonEntity person;
 
-    @ManyToMany(targetEntity = RoleEntity.class, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = RoleEntity.class, fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "idUsuario"), inverseJoinColumns = @JoinColumn(name = "idRol"))
     private Set<RoleEntity> roles;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<SessionEntity> sessions;
 
     @PrePersist
