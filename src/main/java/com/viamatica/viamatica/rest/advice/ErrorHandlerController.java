@@ -26,6 +26,7 @@ public class ErrorHandlerController {
                 .build();
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ErrorResponse handleContraintViolationException(ConstraintViolationException ex) {
         List<String> details = new ArrayList<>();

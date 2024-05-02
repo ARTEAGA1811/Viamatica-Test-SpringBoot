@@ -44,4 +44,9 @@ public class RoleServiceImpl implements IRoleService {
     public void delete(Long aLong) {
         roleRepository.delete(aLong);
     }
+
+    @Override
+    public Role getRoleByName(String name) {
+        return roleRepository.getRoleByName(name).orElseThrow(() -> new EntityNotFoundException(ErrorCatalog.ROLE_NOT_FOUND));
+    }
 }

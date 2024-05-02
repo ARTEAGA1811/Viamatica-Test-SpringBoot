@@ -41,8 +41,8 @@ public class UserServiceImpl implements IUserService {
         return userRepository.getById(id)
                 .map(u -> {
                     u.setUsername(entity.getUsername());
-                    u.setPassword(entity.getPassword());
-                    u.setEmail(entity.getEmail());
+//                    u.setPassword(entity.getPassword());
+//                    u.setEmail(entity.getEmail());
                     u.setRoles(entity.getRoles());
                     return userRepository.update(u);
                 }).orElseThrow(() -> new EntityNotFoundException(ErrorCatalog.USER_NOT_FOUND));

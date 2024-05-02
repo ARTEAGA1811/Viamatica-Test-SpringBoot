@@ -1,11 +1,17 @@
 package com.viamatica.viamatica.rest.controllers;
 
+import com.viamatica.viamatica.business.port.IPersonService;
+import com.viamatica.viamatica.business.port.IRoleService;
 import com.viamatica.viamatica.business.port.IUserService;
+import com.viamatica.viamatica.domain.dto.Person;
+import com.viamatica.viamatica.domain.dto.Role;
 import com.viamatica.viamatica.domain.dto.User;
+import com.viamatica.viamatica.domain.dto.request.UserCreateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -13,6 +19,10 @@ import java.util.List;
 public class UserController {
     @Autowired
     private IUserService userService;
+    @Autowired
+    IPersonService personService;
+    @Autowired
+    private IRoleService roleService;
 
     @GetMapping("")
     public ResponseEntity<List<User>> getUsers() {
@@ -27,9 +37,23 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User newUser = userService.create(user);
-        return ResponseEntity.ok(newUser);
+    public ResponseEntity<User> createUser(@RequestBody UserCreateRequest userCreateRequest) {
+        Person person = personService.getById(Long.valueOf(userCreateRequest.getPersonId()));
+        List<Role> roles = new ArrayList<>();
+        userCreateRequest.getRoles().forEach(roleName -> {
+            Role r = roleService.getRoleByName(roleName);
+            roles.add(r);
+        });
+
+        User user = User.builder()
+                .username(userCreateRequest.getUsername())
+                .password(userCreateRequest.getPassword())
+                .person(person)
+                .roles(roles)
+                .build();
+        User userCreated = userService.create(user);
+
+        return ResponseEntity.ok(userCreated);
     }
 
     @PutMapping("/{id}")

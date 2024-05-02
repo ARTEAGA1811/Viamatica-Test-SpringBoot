@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class PersonServiceImpl implements IPersonService {
@@ -27,6 +29,9 @@ public class PersonServiceImpl implements IPersonService {
 
     @Override
     public Person create(Person entity) {
+        if (entity.getIdentification() == null || !isvalidIdentification(entity.getIdentification())) {
+            throw new IllegalArgumentException("Invalid identification");
+        }
         return personRepository.create(entity);
     }
 
@@ -45,5 +50,14 @@ public class PersonServiceImpl implements IPersonService {
     @Override
     public void delete(Long aLong) {
         personRepository.delete(aLong);
+    }
+
+
+    private boolean isvalidIdentification(String identification) {
+        String regex = "(\\d)\\1{3}";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(identification);
+
+        return !matcher.find();
     }
 }

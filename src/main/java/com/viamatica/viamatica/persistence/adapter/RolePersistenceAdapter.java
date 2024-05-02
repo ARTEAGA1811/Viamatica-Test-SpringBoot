@@ -41,4 +41,9 @@ public class RolePersistenceAdapter implements IRoleRepository {
     public void delete(Long aLong) {
         rolePersistenceRepository.deleteById(aLong);
     }
+
+    @Override
+    public Optional<Role> getRoleByName(String name) {
+        return rolePersistenceRepository.findByName(name).map(roleMapper::toRole);
+    }
 }

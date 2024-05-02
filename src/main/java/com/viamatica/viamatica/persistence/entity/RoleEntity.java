@@ -20,6 +20,6 @@ public class RoleEntity {
     private Integer id;
 
     @Column(name = "nombre", nullable = false, length = 50)
-    @NotBlank
+    @NotBlank(message = "The name is required")
     private String name;
 }

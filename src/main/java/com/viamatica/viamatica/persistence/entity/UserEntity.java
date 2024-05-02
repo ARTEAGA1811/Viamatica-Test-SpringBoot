@@ -1,6 +1,7 @@
 package com.viamatica.viamatica.persistence.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -33,6 +35,9 @@ public class UserEntity {
     private String password;
 
     @Column(name = "mail", nullable = false, unique = true, length = 120)
+    @Email
+    @NotBlank
+    @Size(max = 120, message = "The email must be less than 120 characters")
     private String email;
 
     @Column(name = "sessionActive")
@@ -51,6 +56,11 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<SessionEntity> sessions;
+
+    @PrePersist
+    protected void onCreate() {
+        this.status = "active";
+    }
 
 
 }
