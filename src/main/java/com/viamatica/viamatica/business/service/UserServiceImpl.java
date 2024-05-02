@@ -76,4 +76,9 @@ public class UserServiceImpl implements IUserService {
         }
         return email;
     }
+
+    @Override
+    public User getByUsername(String username) {
+        return userRepository.getUserByUsername(username).orElseThrow(() -> new EntityNotFoundException(ErrorCatalog.USER_NOT_FOUND));
+    }
 }
