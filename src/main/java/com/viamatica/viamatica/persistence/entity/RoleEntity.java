@@ -1,6 +1,7 @@
 package com.viamatica.viamatica.persistence.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,6 @@ public class RoleEntity {
     private Integer id;
 
     @Column(name = "nombre", nullable = false, length = 50)
+    @NotBlank
     private String name;
 }

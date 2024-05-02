@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface IUserPersistenceRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByUsername(String username);
-
+    boolean existsByEmail(String email);
 }

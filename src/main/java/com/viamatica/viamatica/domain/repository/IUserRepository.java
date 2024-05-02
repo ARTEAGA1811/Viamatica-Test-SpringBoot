@@ -7,7 +7,6 @@ import java.util.Optional;
 
 public interface IUserRepository extends IEntityCrudRepository<User, Long>{
 
-
     Optional<User> getUserByUsername(String name);
-
+    boolean existsByEmail(String email);
 }

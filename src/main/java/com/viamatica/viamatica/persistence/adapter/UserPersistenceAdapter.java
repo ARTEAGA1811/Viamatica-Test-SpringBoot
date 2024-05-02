@@ -33,6 +33,11 @@ public class UserPersistenceAdapter implements IUserRepository {
     }
 
     @Override
+    public boolean existsByEmail(String email) {
+        return userPersistenceRepository.existsByEmail(email);
+    }
+
+    @Override
     public User create(User user) {
         return userMapper.toUser(userPersistenceRepository.save(userMapper.toUserEntity(user)));
     }

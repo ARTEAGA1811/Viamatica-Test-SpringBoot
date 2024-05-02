@@ -1,6 +1,8 @@
 package com.viamatica.viamatica.persistence.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,9 +23,13 @@ public class UserEntity {
     private Integer id;
 
     @Column(name = "username", unique = true, nullable = false, length = 50)
+    @NotBlank
+    @Size(min = 8, max = 20, message = "The username must be between 8 and 20 characters")
     private String username;
 
     @Column(name = "password", nullable = false)
+    @Size(min = 8, message = "The password must be at least 8 characters")
+    @NotBlank
     private String password;
 
     @Column(name = "mail", nullable = false, unique = true, length = 120)

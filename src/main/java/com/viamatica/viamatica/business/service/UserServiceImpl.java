@@ -1,6 +1,7 @@
 package com.viamatica.viamatica.business.service;
 
 import com.viamatica.viamatica.business.port.IUserService;
+import com.viamatica.viamatica.domain.dto.Person;
 import com.viamatica.viamatica.domain.dto.User;
 import com.viamatica.viamatica.domain.repository.IUserRepository;
 import com.viamatica.viamatica.errors.EntityNotFoundException;
@@ -28,6 +29,10 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User create(User entity) {
         //TODO: ADD PASSWORD ENCODING
+        //Create email.
+        if (entity.getEmail() == null) {
+            entity.setEmail(generateEmail(entity.getPerson()));
+        }
         return userRepository.create(entity);
     }
 
@@ -46,5 +51,25 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void delete(Long id) {
         userRepository.delete(id);
+    }
+
+
+    private String generateEmail(Person person) {
+        String firstCharName = (person.getNames().charAt(0) + "").toLowerCase();
+        String lastNames = person.getLastNames().toLowerCase();
+        String firstLastName = lastNames.split(" ")[0];
+        String firstChartSecondLastName = lastNames.split(" ")[1].charAt(0) + "";
+
+        String baseEmail = firstCharName + firstLastName + firstChartSecondLastName;
+        String email = baseEmail + "@mail.com";
+        boolean emailExist = userRepository.existsByEmail(email);
+        if (emailExist) {
+            int i = 1;
+            while (userRepository.existsByEmail(baseEmail + i + "@mail.com")) {
+                i++;
+            }
+            email = baseEmail + i + "@mail.com";
+        }
+        return email;
     }
 }
