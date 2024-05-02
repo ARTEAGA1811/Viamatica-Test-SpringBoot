@@ -17,7 +17,7 @@ public class User {
     private boolean sessionActive;
     private String status;
 
-    private List<Person> personList;
+    private Person person;
 
     private List<Role> roles;
 

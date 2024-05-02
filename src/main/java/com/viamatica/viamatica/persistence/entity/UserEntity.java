@@ -43,5 +43,8 @@ public class UserEntity {
     @JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "idUsuario"), inverseJoinColumns = @JoinColumn(name = "idRol"))
     private Set<RoleEntity> roles;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<SessionEntity> sessions;
+
 
 }
