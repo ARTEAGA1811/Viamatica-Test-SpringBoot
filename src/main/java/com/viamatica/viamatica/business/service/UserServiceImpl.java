@@ -7,6 +7,7 @@ import com.viamatica.viamatica.domain.repository.IUserRepository;
 import com.viamatica.viamatica.errors.EntityNotFoundException;
 import com.viamatica.viamatica.utils.ErrorCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,9 @@ import java.util.List;
 public class UserServiceImpl implements IUserService {
     @Autowired
     private IUserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> getAll() {
@@ -28,7 +32,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User create(User entity) {
-        //TODO: ADD PASSWORD ENCODING
+        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         //Create email.
         if (entity.getEmail() == null) {
             entity.setEmail(generateEmail(entity.getPerson()));
