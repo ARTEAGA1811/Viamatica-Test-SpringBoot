@@ -9,4 +9,5 @@ public interface IUserRepository extends IEntityCrudRepository<User, Long>{
 
     Optional<User> getUserByUsername(String name);
     boolean existsByEmail(String email);
+    Optional<User> getUserByEmail(String email);
 }

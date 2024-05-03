@@ -38,6 +38,11 @@ public class UserPersistenceAdapter implements IUserRepository {
     }
 
     @Override
+    public Optional<User> getUserByEmail(String email) {
+        return userPersistenceRepository.findByEmail(email).map(userMapper::toUser);
+    }
+
+    @Override
     public User create(User user) {
         return userMapper.toUser(userPersistenceRepository.save(userMapper.toUserEntity(user)));
     }

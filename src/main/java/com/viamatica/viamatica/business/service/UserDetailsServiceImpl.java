@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,16 +20,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private IUserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.viamatica.viamatica.domain.dto.User userDomain = userRepository.getUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found by username: " + username));
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        Optional<com.viamatica.viamatica.domain.dto.User> optionalUserDomain = userRepository.getUserByUsername(usernameOrEmail);
+        if (optionalUserDomain.isEmpty()) {
+            optionalUserDomain = userRepository.getUserByEmail(usernameOrEmail);
+        }
+        if (optionalUserDomain.isEmpty()) {
+            throw new UsernameNotFoundException("User not found by username or email: " + usernameOrEmail);
+        }
 
-        Collection<? extends GrantedAuthority> authorities = userDomain.getRoles()
+
+        Collection<? extends GrantedAuthority> authorities = optionalUserDomain.get().getRoles()
                 .stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
                 .collect(Collectors.toSet());
         return new User(
-                userDomain.getUsername(),
-                userDomain.getPassword(),
+                optionalUserDomain.get().getUsername(),
+                optionalUserDomain.get().getPassword(),
                 true,
                 true,
                 true,
