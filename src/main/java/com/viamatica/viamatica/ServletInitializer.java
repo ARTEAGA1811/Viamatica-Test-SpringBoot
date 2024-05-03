@@ -6,6 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,5 +26,10 @@ public class ServletInitializer extends SpringBootServletInitializer {
             System.out.println("encoder passsss");
             System.out.println(passwordEncoder.encode("12345678"));
         };
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "Hello World";
     }
 }

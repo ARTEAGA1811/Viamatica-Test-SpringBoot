@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/users")
@@ -45,7 +47,7 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity<User> createUser(@RequestBody UserCreateRequest userCreateRequest) {
         Person person = personService.getById(Long.valueOf(userCreateRequest.getPersonId()));
-        List<Role> roles = new ArrayList<>();
+        Set<Role> roles = new HashSet<>();
         userCreateRequest.getRoles().forEach(roleName -> {
             Role r = roleService.getRoleByName(roleName);
             roles.add(r);

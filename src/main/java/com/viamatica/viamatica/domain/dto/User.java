@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,7 +22,7 @@ public class User {
 
     private Person person;
 
-    private List<Role> roles;
+    private Set<Role> roles;
 
-//    private List<Session> sessions;
+//    private Set<Session> sessions;
 }

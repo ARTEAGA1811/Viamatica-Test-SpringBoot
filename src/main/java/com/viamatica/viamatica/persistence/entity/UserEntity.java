@@ -59,8 +59,8 @@ public class UserEntity {
     @JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "idUsuario"), inverseJoinColumns = @JoinColumn(name = "idRol"))
     private Set<RoleEntity> roles;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<SessionEntity> sessions;
+//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+//    private Set<SessionEntity> sessions;
 
     @PrePersist
     protected void onCreate() {

@@ -6,6 +6,7 @@ import com.viamatica.viamatica.persistence.mapper.IUserPersistenceMapper;
 import com.viamatica.viamatica.persistence.repository.IUserPersistenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +54,7 @@ public class UserPersistenceAdapter implements IUserRepository {
     }
 
     @Override
+    @Transactional
     public User update(User user) {
         return userMapper.toUser(userPersistenceRepository.save(userMapper.toUserEntity(user)));
     }

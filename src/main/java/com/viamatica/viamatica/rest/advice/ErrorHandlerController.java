@@ -4,6 +4,7 @@ import com.viamatica.viamatica.domain.dto.response.ErrorResponse;
 import com.viamatica.viamatica.errors.EntityNotFoundException;
 import com.viamatica.viamatica.utils.ErrorCatalog;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,10 +17,12 @@ import java.util.Collections;
 import java.util.List;
 
 @RestControllerAdvice
+@Slf4j
 public class ErrorHandlerController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EntityNotFoundException.class)
     public ErrorResponse handleEntityNotFoundException(EntityNotFoundException ex) {
+        log.error(ex.getMessage());
         return ErrorResponse.builder()
                 .code(ex.getErrorCatalog().getCode())
                 .message(ex.getErrorCatalog().getMessage())
@@ -30,6 +33,7 @@ public class ErrorHandlerController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ErrorResponse handleContraintViolationException(ConstraintViolationException ex) {
+        log.error(ex.getMessage());
         List<String> details = new ArrayList<>();
 
         ex.getConstraintViolations().forEach(
@@ -48,6 +52,7 @@ public class ErrorHandlerController {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessDeniedException.class)
     public ErrorResponse handleAccessDeniedException(AccessDeniedException ex) {
+        log.error(ex.getMessage());
         return ErrorResponse.builder()
                 .code(ErrorCatalog.ACCESS_DENIED.getCode())
                 .message(ErrorCatalog.ACCESS_DENIED.getMessage())
@@ -60,6 +65,7 @@ public class ErrorHandlerController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleGenericError(Exception exception) {
+        log.error(exception.getMessage());
         return ErrorResponse.builder()
                 .code(ErrorCatalog.GENERIC_ERROR.getCode())
                 .message(ErrorCatalog.GENERIC_ERROR.getMessage())

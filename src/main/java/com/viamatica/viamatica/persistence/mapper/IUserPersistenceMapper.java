@@ -18,8 +18,9 @@ public interface IUserPersistenceMapper {
             @Mapping(target = "email", source = "email"),
             @Mapping(target = "sessionActive", source = "sessionActive"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "roles", source = "roles"),
-            @Mapping(target = "person", source = "person"),
+            @Mapping(target = "failedAttempts", source = "failedAttempts"),
+//            @Mapping(target = "roles", source = "roles"),
+//            @Mapping(target = "person", source = "person"),
 //            @Mapping(target = "sessions", source = "sessions"),
     })
     User toUser(UserEntity userEntity);
@@ -27,5 +28,6 @@ public interface IUserPersistenceMapper {
     List<User> toUsers(List<UserEntity> userEntities);
 
     @InheritInverseConfiguration
+//    @Mapping(target = "sessions", ignore = true)
     UserEntity toUserEntity(User user);
 }
