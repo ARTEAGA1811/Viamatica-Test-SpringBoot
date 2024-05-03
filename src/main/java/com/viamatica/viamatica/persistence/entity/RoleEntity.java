@@ -22,4 +22,12 @@ public class RoleEntity {
     @Column(name = "nombre", nullable = false, length = 50)
     @NotBlank(message = "The name is required")
     private String name;
+
+    @Column(name = "es_activo")
+    private boolean isActive;
+
+    @PrePersist
+    protected void onCreate() {
+        this.isActive = true;
+    }
 }

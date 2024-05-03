@@ -40,4 +40,12 @@ public class PersonEntity {
     @Column(name = "fechaNacimiento")
     private LocalDate birthDate;
 
+    @Column(name = "es_activo")
+    private boolean isActive;
+
+    @PrePersist
+    protected void onCreate() {
+        this.isActive = true;
+    }
+
 }

@@ -3,6 +3,7 @@ package com.viamatica.viamatica.persistence.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class UserEntity {
     @Column(name = "username", unique = true, nullable = false, length = 50)
     @NotBlank
     @Size(min = 8, max = 20, message = "The username must be between 8 and 20 characters")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z]).{8,20}$", message = "The username must have at least one number and one uppercase letter")
     private String username;
 
     @Column(name = "password", nullable = false)
@@ -46,6 +48,9 @@ public class UserEntity {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "intentos_fallidos")
+    private Integer failedAttempts;
+
     @ManyToOne(targetEntity = PersonEntity.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "idPersona")
     private PersonEntity person;
@@ -60,6 +65,7 @@ public class UserEntity {
     @PrePersist
     protected void onCreate() {
         this.status = "active";
+        this.failedAttempts = 0;
     }
 
 

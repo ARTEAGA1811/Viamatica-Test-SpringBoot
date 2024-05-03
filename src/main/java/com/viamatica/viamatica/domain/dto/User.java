@@ -16,6 +16,7 @@ public class User {
     private String email;
     private boolean sessionActive;
     private String status;
+    private Integer failedAttempts;
 
     private Person person;
 

@@ -15,4 +15,5 @@ public class Person {
     private String lastNames;
     private String identification;
     private LocalDate birthDate;
+    private boolean isActive;
 }
