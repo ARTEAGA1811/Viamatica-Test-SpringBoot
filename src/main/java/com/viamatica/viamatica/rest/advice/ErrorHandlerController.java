@@ -5,6 +5,7 @@ import com.viamatica.viamatica.errors.EntityNotFoundException;
 import com.viamatica.viamatica.utils.ErrorCatalog;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -44,16 +45,16 @@ public class ErrorHandlerController {
                 .build();
     }
 
-//    @ResponseStatus(HttpStatus.FORBIDDEN)
-//    @ExceptionHandler(AccessDeniedException.class)
-//    public ErrorResponse handleAccessDeniedException(AccessDeniedException ex) {
-//        return ErrorResponse.builder()
-//                .code(ErrorCatalog.ACCESS_DENIED.getCode())
-//                .message(ErrorCatalog.ACCESS_DENIED.getMessage())
-//                .details(Collections.singletonList(ex.getMessage()))
-//                .timestamp(LocalDateTime.now())
-//                .build();
-//    }
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ErrorResponse handleAccessDeniedException(AccessDeniedException ex) {
+        return ErrorResponse.builder()
+                .code(ErrorCatalog.ACCESS_DENIED.getCode())
+                .message(ErrorCatalog.ACCESS_DENIED.getMessage())
+                .details(Collections.singletonList(ex.getMessage()))
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
 
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

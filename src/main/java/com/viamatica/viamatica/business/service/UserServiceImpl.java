@@ -81,4 +81,9 @@ public class UserServiceImpl implements IUserService {
     public User getByUsername(String username) {
         return userRepository.getUserByUsername(username).orElseThrow(() -> new EntityNotFoundException(ErrorCatalog.USER_NOT_FOUND));
     }
+
+    @Override
+    public void addAttempt(String username) {
+        userRepository.addAttempt(username);
+    }
 }
