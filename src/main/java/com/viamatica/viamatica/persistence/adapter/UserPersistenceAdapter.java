@@ -43,6 +43,11 @@ public class UserPersistenceAdapter implements IUserRepository {
     }
 
     @Override
+    public void addAttempt(String username) {
+        userPersistenceRepository.updateFailAttemps(username);
+    }
+
+    @Override
     public User create(User user) {
         return userMapper.toUser(userPersistenceRepository.save(userMapper.toUserEntity(user)));
     }

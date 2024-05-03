@@ -2,6 +2,7 @@ package com.viamatica.viamatica.domain.dto;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -22,5 +23,5 @@ public class User {
 
     private List<Role> roles;
 
-    private List<Session> sessions;
+//    private List<Session> sessions;
 }

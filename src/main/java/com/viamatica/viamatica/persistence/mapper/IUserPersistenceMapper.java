@@ -20,7 +20,7 @@ public interface IUserPersistenceMapper {
             @Mapping(target = "status", source = "status"),
             @Mapping(target = "roles", source = "roles"),
             @Mapping(target = "person", source = "person"),
-            @Mapping(target = "sessions", source = "sessions"),
+//            @Mapping(target = "sessions", source = "sessions"),
     })
     User toUser(UserEntity userEntity);
 
