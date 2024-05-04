@@ -26,7 +26,7 @@ public class UserEntity {
     private Integer id;
 
     @Column(name = "username", unique = true, nullable = false, length = 50)
-    @NotBlank
+    @NotBlank(message = "The username is required")
     @Size(min = 8, max = 20, message = "The username must be between 8 and 20 characters")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z]).{8,20}$", message = "The username must have at least one number and one uppercase letter")
     private String username;

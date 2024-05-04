@@ -44,6 +44,7 @@ public class UserServiceImpl implements IUserService {
     public User update(Long id, User entity) {
         return userRepository.getById(id)
                 .map(u -> {
+//                    u.setId(null);
                     u.setUsername(entity.getUsername());
 //                    u.setPassword(entity.getPassword());
 //                    u.setEmail(entity.getEmail());

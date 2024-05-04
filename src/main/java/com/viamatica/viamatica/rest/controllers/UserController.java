@@ -7,6 +7,7 @@ import com.viamatica.viamatica.domain.dto.Person;
 import com.viamatica.viamatica.domain.dto.Role;
 import com.viamatica.viamatica.domain.dto.User;
 import com.viamatica.viamatica.domain.dto.request.UserCreateRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,23 +30,28 @@ public class UserController {
     @GetMapping("")
     public ResponseEntity<List<User>> getUsers() {
         List<User> users = userService.getAll();
+        users.forEach(user -> {
+            user.setPassword(null);
+        });
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         User user = userService.getById(id);
+        user.setPassword(null);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.getByUsername(username);
+        user.setPassword(null);
         return ResponseEntity.ok(user);
     }
 
     @PostMapping("")
-    public ResponseEntity<User> createUser(@RequestBody UserCreateRequest userCreateRequest) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
         Person person = personService.getById(Long.valueOf(userCreateRequest.getPersonId()));
         Set<Role> roles = new HashSet<>();
         userCreateRequest.getRoles().forEach(roleName -> {
@@ -60,13 +66,14 @@ public class UserController {
                 .roles(roles)
                 .build();
         User userCreated = userService.create(user);
-
+        userCreated.setPassword(null);
         return ResponseEntity.ok(userCreated);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
         User updatedUser = userService.update(id, user);
+        updatedUser.setPassword(null);
         return ResponseEntity.ok(updatedUser);
     }
 

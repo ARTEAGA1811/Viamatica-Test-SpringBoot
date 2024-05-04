@@ -2,6 +2,7 @@ package com.viamatica.viamatica.domain.dto.request;
 
 import com.viamatica.viamatica.domain.dto.Role;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import java.util.List;
 public class UserCreateRequest {
     @NotBlank(message = "The username is required")
     @Size(min = 8, max = 20, message = "The username must be between 8 and 20 characters")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z]).{8,20}$", message = "The username must have at least one number and one uppercase letter")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z])[a-zA-Z0-9]{8,20}$", message = "The username must have at least one number, one uppercase letter and cannot contain special characters")
     private String username;
 
     @NotBlank(message = "The password is required")
@@ -28,7 +29,7 @@ public class UserCreateRequest {
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$", message = "The password must have at least one uppercase letter, one lowercase letter, one number, one special character and no spaces")
     private String password;
 
-    @NotBlank(message = "The personId is required")
+    @NotNull(message = "The personId is required")
     private Integer personId;
     private List<String> roles;
 
