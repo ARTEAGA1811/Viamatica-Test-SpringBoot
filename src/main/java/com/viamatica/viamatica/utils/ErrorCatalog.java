@@ -11,7 +11,9 @@ public enum ErrorCatalog {
     USER_INVALID("ERR_USER_002", "Invalid user parameters"),
     GENERIC_ERROR("ERR_GEN_001", "An error occurred"),
     VALIDATION_ERROR("ERR_VAL_001", "Validation error"),
-    ACCESS_DENIED("ERR_ACC_001", "Access denied");
+    ACCESS_DENIED("ERR_ACC_001", "Access denied"),
+    BAD_CREDENTIALS("ERR_BAD_CRE_001", "Username or password incorrect"),
+    USER_BLOCKED("ERR_USER_003", "This User has been blocked. Please contact the administrator");
 
     private final String code;
     private final String message;

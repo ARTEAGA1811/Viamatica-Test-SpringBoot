@@ -8,12 +8,15 @@ import com.viamatica.viamatica.domain.dto.Session;
 import com.viamatica.viamatica.domain.dto.User;
 import com.viamatica.viamatica.domain.dto.request.AuthRequest;
 import com.viamatica.viamatica.domain.dto.response.TokenResponse;
+import com.viamatica.viamatica.domain.repository.IUserRepository;
+import com.viamatica.viamatica.errors.UserBlockedException;
 import com.viamatica.viamatica.security.jwt.JwtUtils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -40,6 +44,8 @@ public class AuthController {
     private JwtUtils jwtUtils;
 
     @Autowired
+    private IUserRepository userRepository;
+    @Autowired
     private IUserService userService;
 
     @PostMapping("/authenticate")
@@ -52,6 +58,9 @@ public class AuthController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
             UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
             User user = userService.getByUsername(authRequest.getUsername());
+            if (user.getStatus().equals("blocked")) {
+                throw new UserBlockedException("User is blocked. Please contact the administrator.");
+            }
             String token = jwtUtils.generateAccessToken(userDetails.getUsername());
             Session mySession = new Session();
             mySession.setLoginDate(LocalDateTime.now());
@@ -63,16 +72,14 @@ public class AuthController {
                     .token(token)
                     .username(userDetails.getUsername())
                     .build());
-        } catch (Exception e) {
-//            userService.addAttempt(authRequest.getUsername());
-            User user = userService.getByUsername(authRequest.getUsername());
-            if (user.getFailedAttempts() >= 3) {
-                user.setFailedAttempts(user.getFailedAttempts() + 1);
-                user.setStatus("blocked");
-                userService.update(user.getId(), user);
-            }else{
-                user.setFailedAttempts(user.getFailedAttempts() + 1);
-                userService.update(user.getId(), user);
+        } catch (BadCredentialsException e) {
+            Optional<User> user = userRepository.getUserByUsername(authRequest.getUsername());
+            if (user.isPresent()) {
+                user.get().setFailedAttempts(user.get().getFailedAttempts() + 1);
+                if (user.get().getFailedAttempts() > 3) {
+                    user.get().setStatus("blocked");
+                }
+                userRepository.update(user.get());
             }
             throw e;
         }

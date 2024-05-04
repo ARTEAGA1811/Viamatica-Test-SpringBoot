@@ -2,11 +2,13 @@ package com.viamatica.viamatica.rest.advice;
 
 import com.viamatica.viamatica.domain.dto.response.ErrorResponse;
 import com.viamatica.viamatica.errors.EntityNotFoundException;
+import com.viamatica.viamatica.errors.UserBlockedException;
 import com.viamatica.viamatica.utils.ErrorCatalog;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,6 +33,17 @@ public class ErrorHandlerController {
         return ErrorResponse.builder()
                 .code(ex.getErrorCatalog().getCode())
                 .message(ex.getErrorCatalog().getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UserBlockedException.class)
+    public ErrorResponse handleUserBlockedException(UserBlockedException ex) {
+        log.error(ex.getMessage());
+        return ErrorResponse.builder()
+                .code(ErrorCatalog.USER_BLOCKED.getCode())
+                .message(ErrorCatalog.USER_BLOCKED.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
     }
@@ -80,6 +93,19 @@ public class ErrorHandlerController {
         return ErrorResponse.builder()
                 .code(ErrorCatalog.ACCESS_DENIED.getCode())
                 .message(ErrorCatalog.ACCESS_DENIED.getMessage())
+                .details(Collections.singletonList(ex.getMessage()))
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    //Bad credentials exception
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(BadCredentialsException.class)
+    public ErrorResponse handleBadCredentialsException(BadCredentialsException ex) {
+        log.error(ex.getMessage());
+        return ErrorResponse.builder()
+                .code(ErrorCatalog.BAD_CREDENTIALS.getCode())
+                .message(ErrorCatalog.BAD_CREDENTIALS.getMessage())
                 .details(Collections.singletonList(ex.getMessage()))
                 .timestamp(LocalDateTime.now())
                 .build();
