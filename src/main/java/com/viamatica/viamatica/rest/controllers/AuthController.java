@@ -57,7 +57,7 @@ public class AuthController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
             UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-            User user = userService.getByUsername(authRequest.getUsername());
+            User user = userService.getByUsername(userDetails.getUsername());
             if (user.getStatus().equals("blocked")) {
                 throw new UserBlockedException("User is blocked. Please contact the administrator.");
             }
