@@ -8,6 +8,7 @@ import com.viamatica.viamatica.utils.ErrorCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -43,5 +44,15 @@ public class SessionServiceImpl implements ISessionService {
     @Override
     public void delete(Long aLong) {
         sessionRepository.delete(aLong);
+    }
+
+    @Override
+    public List<LocalDateTime> getLoginDatesByUserId(Long userId) {
+        return sessionRepository.getLoginDatesByUserId(userId);
+    }
+
+    @Override
+    public List<LocalDateTime> getLogoutDatesByUserId(Long userId) {
+        return sessionRepository.getLogoutDatesByUserId(userId);
     }
 }

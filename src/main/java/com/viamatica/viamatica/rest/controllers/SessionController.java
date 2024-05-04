@@ -4,9 +4,13 @@ import com.viamatica.viamatica.business.port.ISessionService;
 import com.viamatica.viamatica.domain.dto.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/sessions")
@@ -48,5 +52,29 @@ public class SessionController {
     public ResponseEntity<String> deleteSession(@PathVariable Long id) {
         sessionService.delete(id);
         return ResponseEntity.ok("Session deleted");
+    }
+
+    @GetMapping("/login-dates/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<String>> getLoginDatesByUserId(@PathVariable Long userId) {
+        List<String> loginDatesString = sessionService.getLoginDatesByUserId(userId)
+                .stream()
+                .filter(Objects::nonNull)
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(loginDatesString);
+    }
+
+    @GetMapping("/logout-dates/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<String>> getLogoutDatesByUserId(@PathVariable Long userId) {
+        List<String> logoutDatesString = sessionService.getLogoutDatesByUserId(userId)
+                .stream()
+                .filter(Objects::nonNull)
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(logoutDatesString);
     }
 }
