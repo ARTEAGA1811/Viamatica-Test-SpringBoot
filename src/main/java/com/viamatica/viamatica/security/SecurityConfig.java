@@ -55,7 +55,7 @@ public class SecurityConfig  {
                 .csrf(config -> config.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/test", "api/auth/authenticate", "api/auth/logout").permitAll();
+                    auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**","/test", "api/auth/authenticate", "api/auth/logout").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {
@@ -99,6 +99,15 @@ public class SecurityConfig  {
     @Bean
     public SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
+    }
+
+    //WebSercurity enable swagger without security
+    public FilterRegistrationBean<CorsFilter> corsFilter() {
+        FilterRegistrationBean<CorsFilter> filterRegBean = new FilterRegistrationBean<>();
+        filterRegBean.setFilter(new CorsFilter(corsConfigurationSource()));
+        filterRegBean.addUrlPatterns("/v3/api-docs/*");
+        filterRegBean.addUrlPatterns("/swagger-ui/*");
+        return filterRegBean;
     }
 
 }
